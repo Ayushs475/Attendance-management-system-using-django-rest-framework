@@ -106,4 +106,20 @@ class AttendanceLogAPITestCase(BaseAPITestCase):
         self.assertEqual(Attendance_log.objects.count(), 1)
         self.assertEqual(Attendance_log.objects.get().status, 'present')
 
+    def test_update_attendance_log(self):
+        attendance = Attendance_log.objects.create(name='Initial attendance')
+        updated_data = {'name': 'Updated attendance'}
+        response = self.client.put(f'/api/attendance/{attendance.id}/', updated_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        attendance.refresh_from_db()
+        self.assertEqual(attendance.name, 'Updated attendance')
+
+    def test_partial_update_attendance_log(self):
+        attendance = Attendance_log.objects.create(name='Initial attendance')
+        updated_data = {'name': 'Updated attendance'}
+        response = self.client.patch(f'/api/courses/{attendance.id}/', updated_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        attendance.refresh_from_db()
+        self.assertEqual(attendance.name, 'Updated attendance')
+
     
